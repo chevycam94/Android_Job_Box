@@ -1,3 +1,8 @@
+v1.50
+* Added ability to zipalign all APKs in both app & priv-app
+* Removed "adb backup" function.  Will add it back when I fix it
+* More menu fixes
+
 v1.40
 * Added Optimizations menu (currently just for OGG compression)
 * Added more credits to the script
