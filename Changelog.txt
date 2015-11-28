@@ -1,3 +1,9 @@
+v1.20
+* Added Flash menu (recovery only right now)
+* Added error handling to every applicable menu
+* Added option to do a backup before Unlock/Relock
+* Updated some of the graphics
+
 v1.10
 * Fixed incorrect reboot bootloader option
 * Corrected Unlock/Relock commands
