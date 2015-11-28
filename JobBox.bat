@@ -1,7 +1,7 @@
 mode 140,50
 @echo off
 Color a
-Title Android Job Box v1.31 by ChevyCam94
+Title Android Job Box v1.40 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -10,48 +10,247 @@ cd %current%\Data
 :start
 cls
 Echo.
-Echo    лллллллллллл Android Job Box v1.31 лллллллллллл             \   /
+Echo    лллллллллллл Android Job Box v1.40 лллллллллллл             \   /
 Echo    л          ллллл By ChevyCam94 ллллл          л             ллллл
 Echo    л                                             л           ллллллллл
-Echo    л  [1] Unlock bootloader          (fastboot)  л          ллл ллл ллл
-Echo    л  [2] Relock bootloader          (fastboot)  л          ллллллллллл
-Echo    л  [3] Backup and Restore...      (adb)       л       лл ллллллллллл лл
-Echo    л  [4] Flash images...                        л       ллллллллллллллллл
+Echo    л  [1]  Unlock bootloader         (fastboot)  л          ллл ллл ллл
+Echo    л  [2]  Relock bootloader         (fastboot)  л          ллллллллллл
+Echo    л  [3]  Backup and Restore...     (adb)       л       лл ллллллллллл лл
+Echo    л  [4]  Optimizations...          (adb)       л       ллллллллллллллллл
+Echo    л  [5]  Flash images...                       л       ллллллллллллллллл
 Echo    л                                             л       лл ллллллллллл лл
 Echo    ллллллллллллллллллллллллллллллллллллллллллллллл       лл ллллллллллл лл
-Echo    л                                             л       лл ллллллллллл лл
-Echo    л [r]    Reboot...                            л          ллллллллллл
-Echo    л [e]    Exit                                 л            ллл ллл
-Echo    л                                             л            ллл ллл
-Echo    ллллллллллллллллллллллллллллллллллллллллллллллл            ллл ллл
+Echo    л                                             л          ллллллллллл
+Echo    л  [d]  Device info                           л            ллллллл
+Echo    л  [r]  Reboot...                             л            ллл ллл
+Echo    л  [e]  Exit                                  л            ллл ллл
+Echo    л                                             л
+Echo    ллллллллллллллллллллллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == 1 goto unlock
 if %choice% == 2 goto relock
 if %choice% == 3 goto backuprestore
-if %choice% == 4 goto flash
+if %choice% == 4 goto optimizations
+if %choice% == 5 goto flash
+if %choice% == d goto deviceinfo
 if %choice% == r goto reboot
 if %choice% == e goto exit
 if not %choice% == 1 goto start
 if not %choice% == 2 goto start
 if not %choice% == 3 goto start
 if not %choice% == 4 goto start
+if not %choice% == 5 goto start
+if not %choice% == d goto start
 if not %choice% == r goto start
 if not %choice% == e goto start
+
+:optimizations
+cls
+Echo.
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo    л                                       л     ллллллл
+Echo    л  Optimizations:                       л   лллБББББллл
+Echo    л                                       л     лБББББл
+Echo    ллллллллллллллллллллллллллллллллллллллллл   лллБББББллл
+Echo    л                                       л     лБББББл
+Echo    л  -OGG-                                л   лллБББББллл
+Echo    л  [a]  Optimize ALARMS          (adb)  л     ллллллл
+Echo    л  [n]  Optimize NOTIFICATIONS   (adb)  л
+Echo    л  [r]  Optimize RINGTONES       (adb)  л
+Echo    л  [u]  Optimize UI SOUNDS       (adb)  л
+Echo    л                                       л
+Echo    л  [aa] Optimize ALL AUDIO       (adb)  л
+Echo    л                                       л
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo    л                                       л
+Echo    л  [0]  Main Menu                       л
+Echo    л                                       л
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo.
+@echo off
+set /p choice=Select: 
+if %choice% == a (
+  if exist OGG del /Q OGG
+  @md OGG
+  cls
+  Echo.
+  Echo  Mounting system R/W...
+  adb remount
+  Echo.
+  Echo  Pulling audio files...
+  adb pull /system/media/audio/alarms/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized audio back to device...
+  adb push OGG /system/media/audio/alarms
+  @rmdir /S /Q OGG
+  @del *.ogg
+  Echo.
+  Echo  Optimizations complete!
+  Pause
+  goto optimizations
+)
+if %choice% == n (
+  if exist OGG del /Q OGG
+  @md OGG
+  cls
+  Echo.
+  Echo  Mounting system R/W...
+  adb remount
+  Echo.
+  Echo  Pulling audio files...
+  adb pull /system/media/audio/notifications/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized audio back to device...
+  adb push OGG /system/media/audio/notifications
+  @rmdir /S /Q OGG
+  @del *.ogg
+  Echo.
+  Echo  Optimizations complete!
+  Pause
+  goto optimizations
+)
+if %choice% == r (
+  if exist OGG del /Q OGG
+  @md OGG
+  cls
+  Echo.
+  Echo  Mounting system R/W...
+  adb remount
+  Echo.
+  Echo  Pulling audio files...
+  adb pull /system/media/audio/ringtones/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized audio back to device...
+  adb push OGG /system/media/audio/ringtones
+  @rmdir /S /Q OGG
+  @del *.ogg
+  Echo.
+  Echo  Optimizations complete!
+  Pause
+  goto optimizations
+)
+if %choice% == u (
+  if exist OGG del /Q OGG
+  @md OGG
+  cls
+  Echo.
+  Echo  Mounting system R/W...
+  adb remount
+  Echo.
+  Echo  Pulling audio files...
+  adb pull /system/media/audio/ui/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized audio back to device...
+  adb push OGG /system/media/audio/ui
+  @rmdir /S /Q OGG
+  @del *.ogg
+  Echo.
+  Echo  Optimizations complete!
+  Pause
+  goto optimizations
+)
+if %choice% == aa (
+  if exist OGG del /Q OGG
+  @md OGG
+  cls
+  Echo.
+  Echo  Mounting system R/W...
+  adb remount
+  Echo.
+  Echo  Pulling ALARMS audio files...
+  adb pull /system/media/audio/alarms/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized ALARMS back to device...
+  adb push OGG /system/media/audio/alarms
+  @rmdir /S /Q OGG
+  @del *.ogg
+  @md OGG
+  Echo.
+  Echo  Pulling NOTIFICATIONS audio files...
+  adb pull /system/media/audio/notifications/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized NOTIFICATIONS back to device...
+  adb push OGG /system/media/audio/notifications
+  @rmdir /S /Q OGG
+  @del *.ogg
+  @md OGG
+  Echo.
+  Echo  Pulling RINGTONES audio files...
+  adb pull /system/media/audio/ringtones/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized RINGTONES back to device...
+  adb push OGG /system/media/audio/ringtones
+  @rmdir /S /Q OGG
+  @del *.ogg
+  @md OGG
+  Echo.
+  Echo  Pulling UI audio files...
+  adb pull /system/media/audio/ui/ .
+  for %%a in ("*.ogg") do (
+    Echo %%a
+    sox.exe %%a -C 0 "%current%\Data\OGG\%%a"
+  )
+  Echo.
+  Echo  Pushing optimized UI back to device...
+  adb push OGG /system/media/audio/ui
+  @rmdir /S /Q OGG
+  @del *.ogg
+  @md OGG
+  Echo.
+  Echo  All audio optimizations complete!
+  Pause
+  goto optimizations
+)
+if %choice% == 0 goto start
+if not %choice% == a goto optimizations
+if not %choice% == n goto optimizations
+if not %choice% == r goto optimizations
+if not %choice% == u goto optimizations
+if not %choice% == aa goto optimizations
+if not %choice% == 0 goto optimizations
 
 :unlock
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллллл
-Echo    л                                л      ллл
-Echo    л  Unlock bootloader:            л     л   л
-Echo    л                                л     л   л
-Echo    л  [1] fastboot flashing unlock  л         л
-Echo    л  [2] fastboot oem unlock       л    ллллллл
-Echo    л                                л    ллллллл
-Echo    л  [0] Main Menu                 л    ллллллл
-Echo    л                                л    ллллллл
-Echo    лллллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллллл
+Echo    л                                 л      ллл
+Echo    л  Unlock bootloader:             л     л   л
+Echo    л                                 л     л   л
+Echo    л  [1]  fastboot flashing unlock  л         л
+Echo    л  [2]  fastboot oem unlock       л    ллллллл
+Echo    л                                 л    ллллллл
+Echo    л  [0]  Main Menu                 л    ллллллл
+Echo    л                                 л    ллллллл
+Echo    ллллллллллллллллллллллллллллллллллл
 Echo.
 @echo off
 set /p choice=Select: 
@@ -71,16 +270,16 @@ if not %choice% == 0 goto unlock
 :ffu
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллллллл
-Echo    л                                  л      ллл
-Echo    л  Unlock bootloader:              л     л   л
-Echo    л                                  л     л   л
-Echo    л  [1] WITH backup     (adb)       л         л
-Echo    л  [2] WITHOUT backup  (fastboot)  л    ллллллл
-Echo    л                                  л    ллллллл
-Echo    л  [0] Unlock menu                 л    ллллллл
-Echo    л                                  л    ллллллл
-Echo    лллллллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллллллл
+Echo    л                                   л      ллл
+Echo    л  Unlock bootloader:               л     л   л
+Echo    л                                   л     л   л
+Echo    л  [1]  WITH backup     (adb)       л         л
+Echo    л  [2]  WITHOUT backup  (fastboot)  л    ллллллл
+Echo    л                                   л    ллллллл
+Echo    л  [0]  Unlock menu                 л    ллллллл
+Echo    л                                   л    ллллллл
+Echo    ллллллллллллллллллллллллллллллллллллл
 Echo.
 @echo off
 set /p choice=Select: 
@@ -88,6 +287,7 @@ if %choice% == 1 (
 Echo.
 set /p backupname=Enter a name for your backup: 
 adb backup -all -f "%current%\Backup\%backupname%.ab"
+adb reboot bootloader
 fastboot flashing unlock
 Pause
 goto start
@@ -107,16 +307,16 @@ if not %choice% == 0 goto ffu
 :relock
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллл
-Echo    л                              л
-Echo    л  Relock bootloader:          л      ллл
-Echo    л                              л     л   л
-Echo    л  [1] fastboot flashing lock  л     л   л
-Echo    л  [2] fastboot oem lock       л    ллллллл
-Echo    л                              л    ллллллл
-Echo    л  [0] Main Menu               л    ллллллл
-Echo    л                              л    ллллллл
-Echo    лллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллл
+Echo    л                               л
+Echo    л  Relock bootloader:           л      ллл
+Echo    л                               л     л   л
+Echo    л  [1]  fastboot flashing lock  л     л   л
+Echo    л  [2]  fastboot oem lock       л    ллллллл
+Echo    л                               л    ллллллл
+Echo    л  [0]  Main Menu               л    ллллллл
+Echo    л                               л    ллллллл
+Echo    ллллллллллллллллллллллллллллллллл
 Echo.
 @echo off
 set /p choice=Select: 
@@ -130,7 +330,6 @@ Pause
 goto start
 )
 if %choice% == 0 goto start
-
 if not %choice% == 1 goto relock
 if not %choice% == 2 goto relock
 if not %choice% == 0 goto relock
@@ -138,16 +337,16 @@ if not %choice% == 0 goto relock
 :ffl
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллллллл
-Echo    л                                  л
-Echo    л  Relock bootloader:              л      ллл
-Echo    л                                  л     л   л
-Echo    л  [1] WITH backup     (adb)       л     л   л
-Echo    л  [2] WITHOUT backup  (fastboot)  л    ллллллл
-Echo    л                                  л    ллллллл
-Echo    л  [0] Relock menu                 л    ллллллл
-Echo    л                                  л    ллллллл
-Echo    лллллллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллллллл
+Echo    л                                   л
+Echo    л  Relock bootloader:               л      ллл
+Echo    л                                   л     л   л
+Echo    л  [1]  WITH backup     (adb)       л     л   л
+Echo    л  [2]  WITHOUT backup  (fastboot)  л    ллллллл
+Echo    л                                   л    ллллллл
+Echo    л  [0]  Relock menu                 л    ллллллл
+Echo    л                                   л    ллллллл
+Echo    ллллллллллллллллллллллллллллллллллллл
 Echo.
 @echo off
 set /p choice=Select: 
@@ -174,18 +373,18 @@ if not %choice% == 0 goto ffl
 :backuprestore
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллл
-Echo    л                          л
-Echo    л  Backup and Restore:     л
-Echo    л                          л     ллл                    ллл
-Echo    л  [b] Backup...           л    лБББлллл         л     лБББлллл
-Echo    л  [r] Restore...          л    лББББББл          л    лББББББл
-Echo    л                          л    лББББББл   ллллллллл   лББББББл
-Echo    л  [o] Open backup folder  л    лББББББл          л    лББББББл
-Echo    л                          л    лллллллл         л     лллллллл
-Echo    л  [0] Main Menu           л
-Echo    л                          л
-Echo    лллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллл
+Echo    л                           л
+Echo    л  Backup and Restore:      л
+Echo    л                           л     ллл                    ллл
+Echo    л  [b]  Backup...           л    лБББлллл         л     лБББлллл
+Echo    л  [r]  Restore...          л    лББББББл          л    лББББББл
+Echo    л                           л    лББББББл   ллллллллл   лББББББл
+Echo    л  [o]  Open backup folder  л    лББББББл          л    лББББББл
+Echo    л                           л    лллллллл         л     лллллллл
+Echo    л  [0]  Main Menu           л
+Echo    л                           л
+Echo    ллллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == b goto backup
@@ -200,27 +399,27 @@ if not %choice% == 0 goto backuprestore
 :backup
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллллллллл
-Echo    л                                    л
-Echo    л  Backup:                           л
-Echo    л                                    л
-Echo    л  [f] Full backup                   л
-Echo    л                                    л
-Echo    лллллллллллллллллллллллллллллллллллллл
-Echo    л                                    л
-Echo    л   The following are pulled from    л
-Echo    л    -= INTERNAL STORAGE ONLY =-     л
-Echo    л                                    л
-Echo    л  [d] Downloads                     л
-Echo    л  [p] Pictures                      л
-Echo    л  [v] Videos                        л
-Echo    л  [m] Music                         л
-Echo    л                                    л
-Echo    л  [a] Application data              л
-Echo    л                                    л
-Echo    л  [0] Backup/Restore menu           л
-Echo    л                                    л
-Echo    лллллллллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллллллллл
+Echo    л                                     л
+Echo    л  Backup:                            л
+Echo    л                                     л
+Echo    л  [f]  Full backup                   л
+Echo    л                                     л
+Echo    ллллллллллллллллллллллллллллллллллллллл
+Echo    л                                     л
+Echo    л   The following are pulled from     л
+Echo    л    -= INTERNAL STORAGE ONLY =-      л
+Echo    л                                     л
+Echo    л  [d]  Downloads                     л
+Echo    л  [p]  Pictures                      л
+Echo    л  [v]  Videos                        л
+Echo    л  [m]  Music                         л
+Echo    л                                     л
+Echo    л  [a]  Application data              л
+Echo    л                                     л
+Echo    л  [0]  Backup/Restore menu           л
+Echo    л                                     л
+Echo    ллллллллллллллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == f (
@@ -287,27 +486,27 @@ if not %choice% == 0 goto backup
 :restore
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллллллллллл
-Echo    л                                    л
-Echo    л  Restore:                          л
-Echo    л                                    л
-Echo    л  [f] Full restore                  л
-Echo    л                                    л
-Echo    лллллллллллллллллллллллллллллллллллллл
-Echo    л                                    л
-Echo    л    The following are pushed to     л
-Echo    л    -= INTERNAL STORAGE ONLY =-     л
-Echo    л                                    л
-Echo    л  [d] Downloads                     л
-Echo    л  [p] Pictures                      л
-Echo    л  [v] Videos                        л
-Echo    л  [m] Music                         л
-Echo    л                                    л
-Echo    л  [a] Application data              л
-Echo    л                                    л
-Echo    л  [0] Backup/Restore menu           л
-Echo    л                                    л
-Echo    лллллллллллллллллллллллллллллллллллллл
+Echo    ллллллллллллллллллллллллллллллллллллллл
+Echo    л                                     л
+Echo    л  Restore:                           л
+Echo    л                                     л
+Echo    л  [f]  Full restore                  л
+Echo    л                                     л
+Echo    ллллллллллллллллллллллллллллллллллллллл
+Echo    л                                     л
+Echo    л    The following are pushed to      л
+Echo    л    -= INTERNAL STORAGE ONLY =-      л
+Echo    л                                     л
+Echo    л  [d]  Downloads                     л
+Echo    л  [p]  Pictures                      л
+Echo    л  [v]  Videos                        л
+Echo    л  [m]  Music                         л
+Echo    л                                     л
+Echo    л  [a]  Application data              л
+Echo    л                                     л
+Echo    л  [0]  Backup/Restore menu           л
+Echo    л                                     л
+Echo    ллллллллллллллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == f (
@@ -318,7 +517,6 @@ Echo.
 Pause
 goto restore
 )
-
 if %choice% == d (
 Echo.
   if not exist "%current%\Backup\Files\Download" (
@@ -331,7 +529,6 @@ Echo.
     goto restore
   )
 )
-
 if %choice% == p (
 Echo.
   if not exist "%current%\Backup\Files\Pictures" (
@@ -351,7 +548,6 @@ Echo.
     goto restore
   )
 )
-
 if %choice% == m (
 Echo.
   if not exist "%current%\Backup\Files\Music" (
@@ -363,7 +559,6 @@ Echo.
     goto restore
   )
 )
-
 if %choice% == v (
 Echo.
   if not exist "%current%\Backup\Files\Video" (
@@ -383,7 +578,6 @@ Echo.
     goto restore
   )
 )
-
 if %choice% == a (
 Echo.
   if not exist "%current%\Backup\Files\Android" (
@@ -395,7 +589,6 @@ Echo.
     goto restore
   )
 )
-
 if %choice% == 0 goto backuprestore
 if not %choice% == f goto restore
 if not %choice% == d goto restore
@@ -412,8 +605,8 @@ Echo    ллллллллллллллллллллллллллллллллллллллллллл         лллллллл
 Echo    л                                         л       лл        лл
 Echo    л  Choose reboot method:                  л      л            л
 Echo    л                                         л     л
-Echo    л  [rda] Reboot device (via adb)          л    л               л
-Echo    л  [rdf] Reboot device (via fastboot)     л    л              ллл
+Echo    л  [ra]  Reboot device (via adb)          л    л               л
+Echo    л  [rf]  Reboot device (via fastboot)     л    л              ллл
 Echo    л  [rr]  Reboot into recovery             л    л             л л л
 Echo    л  [rb]  Reboot into bootloader           л    л               л
 Echo    л                                         л     л              л
@@ -422,18 +615,18 @@ Echo    л                                         л       лл        лл
 Echo    ллллллллллллллллллллллллллллллллллллллллллл         лллллллл
 Echo.
 set /p choice=Select: 
-if %choice% == rda goto rda
-if %choice% == rdf goto rdf
+if %choice% == rda goto ra
+if %choice% == rdf goto rf
 if %choice% == rr goto rr
 if %choice% == rb goto rb
 if %choice% == 0 goto start
-if not %choice% == rda goto reboot
-if not %choice% == rdf goto reboot
+if not %choice% == ra goto reboot
+if not %choice% == rf goto reboot
 if not %choice% == rr goto reboot
 if not %choice% == rb goto reboot
 if not %choice% == 0 goto reboot
 
-:rdf
+:rf
 cls
 Echo.
 Echo    ллллллллллллллллллллллллллллллл
@@ -450,7 +643,7 @@ Echo.
 fastboot reboot
 goto reboot
 
-:rda
+:ra
 cls
 Echo.
 Echo    ллллллллллллллллллллллллллллллл
@@ -506,11 +699,11 @@ cls
 Echo.
 Echo    лллллллллллллллллллллллллллллл
 Echo    л                            л    лллллллл
-Echo    л  Flash images:             л    л      л               ллллл
-Echo    л                            л    л      л         л     лБББл
-Echo    л  [fr] Flash recovery       л    л      л          л    лБББл
+Echo    л  Flash images:             л    лББББББл               ллллл
+Echo    л                            л    лББББББл         л     лБББл
+Echo    л  [fr]  Flash recovery      л    лББББББл          л    лБББл
 Echo    л                            л    лллллллл   ллллллллл   лБББл
-Echo    л  [0] Main Menu             л    лББББББл          л    лБББл
+Echo    л  [0]   Main Menu           л    л######л          л    лБББл
 Echo    л                            л    лллллллл         л     ллллл
 Echo    лллллллллллллллллллллллллллллл
 Echo.
@@ -523,16 +716,16 @@ if not %choice% == 0 goto flash
 :flashrecovery
 cls
 Echo.
-Echo    ллллллллллллллллллллллллллллллллллллл
-Echo    л                                   л    лллллллл
-Echo    л  Flash recovery:                  л    л      л               ллллл
-Echo    л                                   л    л      л         л     лБББл
-Echo    л  [fr] "recovery.img"  (fastboot)  л    л      л          л    лБББл
-Echo    л       (in /Data)                  л    лллллллл   ллллллллл   лБББл
-Echo    л                                   л    лББББББл          л    лБББл    
-Echo    л  [0] Flash menu                   л    лллллллл         л     ллллл
-Echo    л                                   л
-Echo    ллллллллллллллллллллллллллллллллллллл
+Echo    лллллллллллллллллллллллллллллллллллллл
+Echo    л                                    л    лллллллл
+Echo    л  Flash recovery:                   л    лББББББл               ллллл
+Echo    л                                    л    лББББББл         л     лБББл
+Echo    л  [fr]  "recovery.img"  (fastboot)  л    лББББББл          л    лБББл
+Echo    л        (in /Data)                  л    лллллллл   ллллллллл   лБББл
+Echo    л                                    л    л######л          л    лБББл
+Echo    л  [0]   Flash menu                  л    лллллллл         л     ллллл
+Echo    л                                    л
+Echo    лллллллллллллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == fr (
@@ -554,11 +747,16 @@ Echo    л                                                       лл
 Echo    л        Thank you for choosing Android Job Box!        лБл
 Echo    л  If you found this helpful, please consider donating  лБл
 Echo    л                                                       лБл
-Echo    л   Credit to Lexmazter for the original script that    лБл
-Echo    л                 this is based off of                  лБл
+Echo    л    No part of this script may be copied, modified     лБл
+Echo    л    redistributed, or included anywhere without my     лБл
+Echo    л               explicit written consent.               лБл
+Echo    л                                                       лБл
+Echo    л   Credit to Lexmazter for the original script base    лБл
+Echo    л   Credit to Chris Bagwell for SOX                     лБл
+Echo    л   Credit to Google for the adb/fastboot binaries      лБл
 Echo    л                                                       лБл
 Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллБл
-Echo     лБББББББББББББББББББББББББББББББББББББББББББББББББББББББлл
+Echo     лББББББББББББББББББББББББББББББББББББББББББББББББББББББББл
 Echo      ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
 Echo.
 @ping localhost -n 3 >NUL

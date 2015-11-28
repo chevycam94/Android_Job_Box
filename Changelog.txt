@@ -1,3 +1,8 @@
+v1.40
+* Added Optimizations menu (currently just for OGG compression)
+* Added more credits to the script
+* Realigned every menu to handle 3 character option choices
+
 v1.31
 * Fixed flashing recovery images
 
