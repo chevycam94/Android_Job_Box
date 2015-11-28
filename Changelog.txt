@@ -1,3 +1,15 @@
+v1.30
+* Updated the adb and fastboot binaries to the current versions
+* Increased the size of the console window for easier viewing
+* Added title to script (title bar)
+* Added individual backup and restore of the following,
+  currently from INTERNAL STORAGE ONLY:
+    - Downloads           (Download)
+    - Pictures            (/Pictures & DCIM/Camera)
+    - Videos              (/Video & Videos)
+    - Music               (/Music)
+    - Application data    (/Android)
+
 v1.20
 * Added Flash menu (recovery only right now)
 * Added error handling to every applicable menu

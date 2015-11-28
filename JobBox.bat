@@ -1,6 +1,7 @@
+mode 140,50
 @echo off
 Color a
-Android Job Box v1.20 by ChevyCam94
+Title Android Job Box v1.30 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -9,7 +10,7 @@ cd %current%\Data
 :start
 cls
 Echo.
-Echo    лллллллллллл Android Job Box v1.20 лллллллллллл             \   /
+Echo    лллллллллллл Android Job Box v1.30 лллллллллллл             \   /
 Echo    л          ллллл By ChevyCam94 ллллл          л             ллллл
 Echo    л                                             л           ллллллллл
 Echo    л  [1] Unlock bootloader          (fastboot)  л          ллл ллл ллл
@@ -24,7 +25,6 @@ Echo    л [e]    Exit                                 л            ллл ллл
 Echo    л                                             л            ллл ллл
 Echo    ллллллллллллллллллллллллллллллллллллллллллллллл            ллл ллл
 Echo.
-@echo off
 set /p choice=Select: 
 if %choice% == 1 goto unlock
 if %choice% == 2 goto relock
@@ -174,17 +174,18 @@ if not %choice% == 0 goto ffl
 :backuprestore
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллллл
-Echo    л                            л
-Echo    л  Backup and Restore:       л     ллл                    ллл
-Echo    л                            л    лБББлллл         л     лБББлллл
-Echo    л  [b] Backup                л    лББББББл          л    лББББББл
-Echo    л  [r] Restore               л    лББББББл   ллллллллл   лББББББл
-Echo    л  [o] Open backup folder    л    лББББББл          л    лББББББл
-Echo    л                            л    лллллллл         л     лллллллл
-Echo    л  [0] Main Menu             л
-Echo    л                            л
-Echo    лллллллллллллллллллллллллллллл
+Echo    лллллллллллллллллллллллллллл
+Echo    л                          л
+Echo    л  Backup and Restore:     л
+Echo    л                          л     ллл                    ллл
+Echo    л  [b] Backup...           л    лБББлллл         л     лБББлллл
+Echo    л  [r] Restore...          л    лББББББл          л    лББББББл
+Echo    л                          л    лББББББл   ллллллллл   лББББББл
+Echo    л  [o] Open backup folder  л    лББББББл          л    лББББББл
+Echo    л                          л    лллллллл         л     лллллллл
+Echo    л  [0] Main Menu           л
+Echo    л                          л
+Echo    лллллллллллллллллллллллллллл
 Echo.
 set /p choice=Select: 
 if %choice% == b goto backup
@@ -201,52 +202,208 @@ cls
 Echo.
 Echo    лллллллллллллллллллллллллллллллллллллл
 Echo    л                                    л
-Echo    л  Create a backup:                  л
+Echo    л  Backup:                           л
 Echo    л                                    л
-Echo    л  Enter a name for your backup.     л
-Echo    л  Find your backups in Data/Backup  л
-Echo    л  folder with the name you gave it  л
+Echo    л  [f] Full backup                   л
 Echo    л                                    л
-Echo    л    Abort with CTRL+C               л
+Echo    лллллллллллллллллллллллллллллллллллллл
+Echo    л                                    л
+Echo    л   The following are pulled from    л
+Echo    л    -= INTERNAL STORAGE ONLY =-     л
+Echo    л                                    л
+Echo    л  [d] Downloads                     л
+Echo    л  [p] Pictures                      л
+Echo    л  [v] Videos                        л
+Echo    л  [m] Music                         л
+Echo    л                                    л
+Echo    л  [a] Application data              л
+Echo    л                                    л
+Echo    л  [0] Backup/Restore menu           л
 Echo    л                                    л
 Echo    лллллллллллллллллллллллллллллллллллллл
 Echo.
-Pause
+set /p choice=Select: 
+if %choice% == f (
 Echo.
 set /p backupname=Enter a name for your backup: 
 adb backup -all -f "%current%\Backup\%backupname%.ab"
 Echo.
 Pause
-goto backuprestore
+goto backup
+)
+if %choice% == d (
+Echo.
+if not exist "%current%\Backup\Files\Download" mkdir "%current%\Backup\Files\Download"
+adb pull /sdcard/Download "%current%\Backup\Files\Download"
+Echo.
+Pause
+goto backup
+)
+if %choice% == p (
+Echo.
+if not exist "%current%\Backup\Files\Pictures" mkdir "%current%\Backup\Files\Pictures"
+if not exist "%current%\Backup\Files\DCIM\Camera" mkdir "%current%\Backup\Files\DCIM\Camera"
+adb pull /sdcard/Pictures "%current%\Backup\Files\Pictures"
+adb pull /sdcard/DCIM/Camera "%current%\Backup\Files\DCIM\Camera"
+Echo.
+Pause
+goto backup
+)
+if %choice% == m (
+Echo.
+if not exist "%current%\Backup\Files\Music" mkdir "%current%\Backup\Files\Music"
+adb pull /sdcard/Music "%current%\Backup\Files\Music"
+Echo.
+Pause
+goto backup
+)
+if %choice% == v (
+Echo.
+if not exist "%current%\Backup\Files\Video" mkdir "%current%\Backup\Files\Video"
+if not exist "%current%\Backup\Files\Videos" mkdir "%current%\Backup\Files\Videos"
+adb pull /sdcard/Video "%current%\Backup\Files\Video"
+adb pull /sdcard/Videos "%current%\Backup\Files\Videos"
+Echo.
+Pause
+goto backup
+)
+if %choice% == a (
+Echo.
+if not exist "%current%\Backup\Files\Android" mkdir "%current%\Backup\Files\Android"
+adb pull /sdcard/Android "%current%\Backup\Files\Android"
+Echo.
+Pause
+goto backup
+)
+if %choice% == 0 goto backuprestore
+if not %choice% == f goto backup
+if not %choice% == d goto backup
+if not %choice% == p goto backup
+if not %choice% == m goto backup
+if not %choice% == v goto backup
+if not %choice% == a goto backup
+if not %choice% == 0 goto backup
 
 :restore
 cls
 Echo.
 Echo    лллллллллллллллллллллллллллллллллллллл
 Echo    л                                    л
-Echo    л  Restore a backup:                 л
+Echo    л  Restore:                          л
 Echo    л                                    л
-Echo    л  Enter the name of your backup or  л
-Echo    л  find your backups in Data/Backup  л
-Echo    л  folder with the name you gave it  л
+Echo    л  [f] Full restore                  л
 Echo    л                                    л
-Echo    л    Abort with CTRL+C               л
+Echo    лллллллллллллллллллллллллллллллллллллл
+Echo    л                                    л
+Echo    л    The following are pushed to     л
+Echo    л    -= INTERNAL STORAGE ONLY =-     л
+Echo    л                                    л
+Echo    л  [d] Downloads                     л
+Echo    л  [p] Pictures                      л
+Echo    л  [v] Videos                        л
+Echo    л  [m] Music                         л
+Echo    л                                    л
+Echo    л  [a] Application data              л
+Echo    л                                    л
+Echo    л  [0] Backup/Restore menu           л
 Echo    л                                    л
 Echo    лллллллллллллллллллллллллллллллллллллл
 Echo.
-Pause
+set /p choice=Select: 
+if %choice% == f (
 Echo.
 set /p backupname=Enter the name of your backup: 
 adb restore "%current%\Backup\%backupname%.ab"
 Echo.
 Pause
-goto backuprestore
+goto restore
+)
 
-:open
-cls
-%SystemRoot%\explorer.exe "%current%\Backup"
-Pause
-goto backuprestore
+if %choice% == d (
+Echo.
+  if not exist "%current%\Backup\Files\Download" (
+    Echo    Nothing in "Download"
+    @ping localhost -n 2 >NUL
+    goto restore
+  ) else (
+    adb push "%current%\Backup\Files\Download" /sdcard/Download
+    Pause
+    goto restore
+  )
+)
+
+if %choice% == p (
+Echo.
+  if not exist "%current%\Backup\Files\Pictures" (
+    Echo    Nothing in "Pictures"
+    @ping localhost -n 2 >NUL
+  ) else (
+    adb push "%current%\Backup\Files\Pictures" /sdcard/Pictures
+    Echo.
+  )
+  if not exist "%current%\Backup\Files\DCIM\Camera" (
+    Echo    Nothing in "DCIM\Camera"
+    @ping localhost -n 2 >NUL
+    goto restore
+  ) else (
+    adb push "%current%\Backup\Files\DCIM\Camera" /sdcard/DCIM/Camera
+    Pause
+    goto restore
+  )
+)
+
+if %choice% == m (
+Echo.
+  if not exist "%current%\Backup\Files\Music" (
+    Echo    Nothing in "Music"
+    @ping localhost -n 2 >NUL
+  ) else (
+    adb push "%current%\Backup\Files\Music" /sdcard/Music
+    Pause
+    goto restore
+  )
+)
+
+if %choice% == v (
+Echo.
+  if not exist "%current%\Backup\Files\Video" (
+    Echo    Nothing in "Video"
+    @ping localhost -n 2 >NUL
+  ) else (
+    adb push "%current%\Backup\Files\Video" /sdcard/Video
+    Echo.
+  )
+  if not exist "%current%\Backup\Files\Videos" (
+    Echo    Nothing in "Videos"
+    @ping localhost -n 2 >NUL
+    goto restore
+  ) else (
+    adb push "%current%\Backup\Files\Videos" /sdcard/Videos
+    Pause
+    goto restore
+  )
+)
+
+if %choice% == a (
+Echo.
+  if not exist "%current%\Backup\Files\Android" (
+    Echo    Nothing in "Android"
+    @ping localhost -n 2 >NUL
+  ) else (
+    adb push "%current%\Backup\Files\Android" /sdcard/Android
+    Pause
+    goto restore
+  )
+)
+
+if %choice% == 0 goto backuprestore
+if not %choice% == f goto restore
+if not %choice% == d goto restore
+if not %choice% == p goto restore
+if not %choice% == m goto restore
+if not %choice% == v goto restore
+if not %choice% == a goto restore
+if not %choice% == 0 goto restore
 
 :reboot
 cls
