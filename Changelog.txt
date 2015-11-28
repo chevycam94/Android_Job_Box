@@ -1,0 +1,8 @@
+v1.10
+* Fixed incorrect reboot bootloader option
+* Corrected Unlock/Relock commands
+* Added option to choose Unlock/Relock command method
+* Added a space after prompts to easily see what command your entering
+
+v1.00
+* Initial release

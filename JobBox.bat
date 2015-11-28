@@ -1,6 +1,6 @@
 @echo off
 Color a
-Android Job Box v1.00 by ChevyCam94
+Android Job Box v1.10 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -9,7 +9,7 @@ cd %current%\Data
 :start
 cls
 Echo.
-Echo    лллллллллллл Android Job Box v1.00 лллллллллллл              \   /
+Echo    лллллллллллл Android Job Box v1.10 лллллллллллл              \   /
 Echo    л          ллллл By ChevyCam94 ллллл          л              ллллл
 Echo    л                                             л            ллллллллл
 Echo    л  [1] Unlock bootloader          (fastboot)  л           ллл ллл ллл
@@ -25,9 +25,9 @@ Echo    л                                             л             ллл ллл
 Echo    ллллллллллллллллллллллллллллллллллллллллллллллл             ллл ллл
 Echo.
 @echo off
-set /p choice=Select:
+set /p choice=Select: 
 
-if %choice% == 1 goto bootloader
+if %choice% == 1 goto unlock
 if %choice% == 2 goto relock
 if %choice% == 3 goto backuprestore
 
@@ -40,41 +40,77 @@ if not %choice% == 3 goto restart
 if not %choice% == r goto restart
 if not %choice% == e goto restart
 
-:bootloader
+:unlock
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллл      ллл
-Echo    л                          л     л   л
-Echo    л  Unlock the bootloader?  л         л
-Echo    л  Must be in "fastboot"   л    ллллллл
-Echo    л    Abort with CTRL+C     л    ллллллл
-Echo    л                          л    ллллллл
-Echo    лллллллллллллллллллллллллллл    ллллллл
+Echo    лллллллллллллллллллллллллллллллллл
+Echo    л                                л      ллл
+Echo    л  Unlock bootloader:            л     л   л
+Echo    л                                л     л   л
+Echo    л  [1] fastboot flashing unlock  л         л
+Echo    л  [2] fastboot oem unlock       л    ллллллл
+Echo    л                                л    ллллллл
+Echo    л  [0] Main Menu                 л    ллллллл
+Echo    л                                л    ллллллл
+Echo    лллллллллллллллллллллллллллллллллл
 Echo.
-Pause
+@echo off
+set /p choice=Select: 
+
+if %choice% == 1 (
 Echo.
-fastboot oem unlock
+fastboot flashing unlock
 Echo.
 Pause
 goto start
+)
+if %choice% == 2 (
+Echo.
+fastboot oem unlock
+Echo.
+goto start
+)
+if %choice% == 0 goto start
+
+if not %choice% == 1 goto unlock
+if not %choice% == 2 goto unlock
+if not %choice% == 0 goto unlock
 
 :relock
 cls
 Echo.
-Echo    лллллллллллллллллллллллллллл      ллл
-Echo    л                          л     л   л
-Echo    л  Relock the bootloader?  л     л   л
-Echo    л  Must be in "fastboot"   л    ллллллл
-Echo    л    Abort with CTRL+C     л    ллллллл
-Echo    л                          л    ллллллл
-Echo    лллллллллллллллллллллллллллл    ллллллл
+Echo    лллллллллллллллллллллллллллллллл
+Echo    л                              л
+Echo    л  Relock bootloader:          л      ллл
+Echo    л                              л     л   л
+Echo    л  [1] fastboot flashing lock  л     л   л
+Echo    л  [2] fastboot oem lock       л    ллллллл
+Echo    л                              л    ллллллл
+Echo    л  [0] Main Menu               л    ллллллл
+Echo    л                              л    ллллллл
+Echo    лллллллллллллллллллллллллллллллл
 Echo.
-Pause
+@echo off
+set /p choice=Select: 
+
+if %choice% == 1 (
 Echo.
-fastboot oem lock
+fastboot flashing lock
 Echo.
 Pause
 goto start
+)
+if %choice% == 2 (
+Echo.
+fastboot oem lock
+Echo.
+goto start
+)
+if %choice% == 0 goto start
+
+if not %choice% == 1 goto relock
+if not %choice% == 2 goto relock
+if not %choice% == 0 goto relock
 
 :backuprestore
 cls
@@ -91,7 +127,7 @@ Echo    л  [0] Main Menu             л
 Echo    л                            л
 Echo    лллллллллллллллллллллллллллллл
 Echo.
-set /p choice=Select:
+set /p choice=Select: 
 if %choice% == b goto backup
 if %choice% == r goto restore
 if %choice% == o goto open
@@ -117,7 +153,7 @@ Echo    лллллллллллллллллллллллллллллллллллллл
 Echo.
 Pause
 Echo.
-set /p backupname=Enter a name for your backup:
+set /p backupname=Enter a name for your backup: 
 adb backup -all -f "%whereami%\Backup\%backupname%.ab"
 Echo.
 Pause
@@ -140,7 +176,7 @@ Echo    лллллллллллллллллллллллллллллллллллллл
 Echo.
 Pause
 Echo.
-set /p backupname=Enter the name of your backup:
+set /p backupname=Enter the name of your backup: 
 adb restore "%current%\Backup\%backupname%.ab"
 Echo.
 Pause
@@ -168,7 +204,7 @@ Echo    л  [0]   Main Menu                        л      л            л
 Echo    л                                         л       лл        лл
 Echo    ллллллллллллллллллллллллллллллллллллллллллл         лллллллл
 Echo.
-set /p choice=Select:
+set /p choice=Select: 
 if %choice% == rda goto rda
 if %choice% == rdf goto rdf
 if %choice% == rr goto rr
@@ -178,7 +214,7 @@ Echo.
 Pause
 goto start
 
-:rda
+:rdf
 cls
 Echo.
 Echo    ллллллллллллллллллллллллллллллл
@@ -195,7 +231,7 @@ Echo.
 fastboot reboot
 goto reboot
 
-:rdf
+:rda
 cls
 Echo.
 Echo    ллллллллллллллллллллллллллллллл
@@ -229,7 +265,7 @@ Echo.
 adb reboot recovery
 goto reboot
 
-:rr
+:rb
 cls
 Echo.
 Echo    ллллллллллллллллллллллллллллллл
@@ -243,7 +279,7 @@ Echo    ллллллллллллллллллллллллллллллл
 Echo.
 Pause
 Echo.
-adb reboot-bootloader
+adb reboot bootloader
 goto reboot
 
 :restart
