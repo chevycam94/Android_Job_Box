@@ -1,7 +1,7 @@
 mode 140,50
 @echo off
 Color a
-Title Android Job Box v1.30 by ChevyCam94
+Title Android Job Box v1.31 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -10,7 +10,7 @@ cd %current%\Data
 :start
 cls
 Echo.
-Echo    лллллллллллл Android Job Box v1.30 лллллллллллл             \   /
+Echo    лллллллллллл Android Job Box v1.31 лллллллллллл             \   /
 Echo    л          ллллл By ChevyCam94 ллллл          л             ллллл
 Echo    л                                             л           ллллллллл
 Echo    л  [1] Unlock bootloader          (fastboot)  л          ллл ллл ллл
@@ -537,7 +537,7 @@ Echo.
 set /p choice=Select: 
 if %choice% == fr (
 Echo.
-fastboot flash recovery %current%/Data/recovery.img
+fastboot flash recovery "%current%/Data/recovery.img"
 Echo.
 Pause
 goto start

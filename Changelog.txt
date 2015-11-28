@@ -1,3 +1,6 @@
+v1.31
+* Fixed flashing recovery images
+
 v1.30
 * Updated the adb and fastboot binaries to the current versions
 * Increased the size of the console window for easier viewing
