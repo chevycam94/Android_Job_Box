@@ -1,3 +1,9 @@
+v1.60
+* Created internal subroutines to reduce the amount of code
+* Rewrote the "full backup" functions
+* Corrected some of the wording for different sections
+* Changed the look of some of the menus
+
 v1.50
 * Added ability to zipalign all APKs in both app & priv-app
 * Removed "adb backup" function.  Will add it back when I fix it
