@@ -1,3 +1,8 @@
+v1.70
+* Reworked the main menu to make selections easier to read
+* Added batch APK install section (not to be confused with sideload)
+* Use 'Echo/' instead of 'Echo.' for a small performance boost
+
 v1.60
 * Created internal subroutines to reduce the amount of code
 * Rewrote the "full backup" functions

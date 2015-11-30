@@ -1,7 +1,7 @@
 mode 140,50
 @echo off
 Color a
-Title Android Job Box v1.60 by ChevyCam94
+Title Android Job Box v1.70 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -9,29 +9,35 @@ cd %current%\Data
 
 :start
 cls
-Echo.
-Echo    лллллл  Android Job Box v1.60  лллллл             \   /
+Echo/
+Echo    лллллл  Android Job Box v1.70  лллллл             \   /
 Echo    л    лллллл By ChevyCam94 лллллл    л             ллллл
 Echo    л                                   л           ллллллллл
 Echo    л  [1]  Unlock bootloader           л          ллл ллл ллл
 Echo    л  [2]  Relock bootloader           л          ллллллллллл
-Echo    л  [3]  Backup and Restore...       л       лл ллллллллллл лл
-Echo    л  [4]  Optimizations...            л       ллллллллллллллллл
-Echo    л  [5]  Flash images...             л       ллллллллллллллллл
 Echo    л                                   л       лл ллллллллллл лл
-Echo    ллллллллллллллллллллллллллллллллллллл       лл ллллллллллл лл
-Echo    л                                   л          ллллллллллл
-Echo    л  [r]  Reboot...                   л            ллл ллл
-Echo    л  [e]  Exit                        л            ллл ллл
+Echo    л  [3]  Backup and Restore          л       ллллллллллллллллл
+Echo    л                                   л       ллллллллллллллллл
+Echo    л  [4]  Install APKs                л       лл ллллллллллл лл
+Echo    л                                   л       лл ллллллллллл лл
+Echo    л  [5]  Optimizations               л          ллллллллллл
+Echo    л                                   л            ллл ллл
+Echo    л  [6]  Flash images                л            ллл ллл
 Echo    л                                   л            ллл ллл
 Echo    ллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo    л                                   л
+Echo    л  [r]  Reboot...                   л
+Echo    л  [e]  Exit                        л
+Echo    л                                   л
+Echo    ллллллллллллллллллллллллллллллллллллл
+Echo/
 set /p choice=Select: 
 if %choice% == 1 goto unlock
 if %choice% == 2 goto relock
 if %choice% == 3 goto backuprestore
-if %choice% == 4 goto optimizations
-if %choice% == 5 goto flash
+if %choice% == 4 goto installapks
+if %choice% == 5 goto optimizations
+if %choice% == 6 goto flash
 if %choice% == r goto reboot
 if %choice% == e goto exit
 if not %choice% == 1 goto start
@@ -39,13 +45,75 @@ if not %choice% == 2 goto start
 if not %choice% == 3 goto start
 if not %choice% == 4 goto start
 if not %choice% == 5 goto start
-if not %choice% == d goto start
+if not %choice% == 6 goto start
 if not %choice% == r goto start
 if not %choice% == e goto start
 
+:installapks
+cls
+Echo/
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo    л                                       л   лллллллл
+Echo    л  Install APKs:                        л   лБББББББл
+Echo    л                                       л   лБлллллБл
+Echo    ллллллллллллллллллллллллллллллллллллллллл   лБлллллБл
+Echo    л                                       л   лБББББББл
+Echo    л  [i]  Install from 'APKs' folder      л   лББAPKББл
+Echo    л                                       л   лБББББББл
+Echo    л  [o]  Open 'APKs' folder              л   ллллллллл
+Echo    л                                       л
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo    л                                       л
+Echo    л  [0]  Main menu                       л
+Echo    л                                       л
+Echo    ллллллллллллллллллллллллллллллллллллллллл
+Echo/
+@echo off
+set /p choice=Select: 
+if %choice% == i (
+  if not exist "%current%\Data\APKs" (
+    Echo  'APKs" directory doesnt exist!
+    ping localhost -n 3 >NUL
+    Goto installapks
+  ) else (
+    If not exist "%current%\Data\APKs\*.apk" (
+      Echo/
+      Echo  No APKs found in 'APKs' directory!
+      ping localhost -n 3 >NUL
+      Goto installapks
+    ) else (
+      Echo/
+      Echo  Installing APKs to device...
+      Echo/
+      For /R APKs %%G IN (*.apk) do (
+        For %%a in ("%%G") do (
+          set "filePath=%%~dpa"
+          set "file=%%~nxa"
+          Echo %%~nxa
+        )
+        adb install "%%G" >nul 2>&1
+      )
+    )
+  )
+  Echo/
+  Echo  -= APK INSTALLS COMPLETE =-
+  Echo/
+  Pause
+  Goto installapks
+)
+if %choice% == o (
+  if not exist "%current%\Data\APKs" mkdir "%current%\Data\APKs"
+  %SystemRoot%\explorer.exe "%current%\Data\APKs"
+  Goto installapks
+)
+if %choice% == 0 goto start
+if not %choice% == a goto installapks
+if not %choice% == o goto installapks
+if not %choice% == 0 goto installapks
+
 :optimizations
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo    л                                       л     ллллллл
 Echo    л  Optimizations:                       л   лллБББББллл
@@ -60,7 +128,7 @@ Echo    л                                       л
 Echo    л  [0]  Main menu                       л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == a goto zipalignapk
@@ -72,7 +140,7 @@ if not %choice% == 0 goto optimizations
 
 :zipalignapk
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo    л                                       л     ллллллл
 Echo    л  Zipalign APKs:                       л   лллБББББллл
@@ -87,13 +155,13 @@ Echo    л                                       л
 Echo    л  [0]  Optimizations menu              л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == a (
-  Echo.
+  Echo/
   Echo  Zipaligning APKs from '\system\app'
-  Echo.
+  Echo/
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
@@ -105,16 +173,16 @@ if %choice% == a (
   adb push TEMP /system/app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
-  Echo.
+  Echo/
   Echo  -= ZIPALIGN COMPLETE =-
-  Echo.
+  Echo/
   Pause
   goto zipalignapk
 )
 if %choice% == p (
-  Echo.
+  Echo/
   Echo  Zipaligning APKs from '\system\priv-app'
-  Echo.
+  Echo/
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
@@ -126,9 +194,9 @@ if %choice% == p (
   adb push TEMP /system/priv-app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
-  Echo.
+  Echo/
   Echo  -= ZIPALIGN COMPLETE =-
-  Echo.
+  Echo/
   Pause
   goto zipalignapk
 )
@@ -139,7 +207,7 @@ if not %choice% == 0 goto zipalignapk
 
 :optimizeogg
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo    л                                       л     ллллллл
 Echo    л  Optimizations:                       л   лллБББББллл
@@ -159,7 +227,7 @@ Echo    л                                       л
 Echo    л  [0]  Optimizations menu              л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == a (
@@ -210,28 +278,28 @@ if %choice% == aa (
   Echo  Pushing optimized ALARMS back to device...
   adb push OGG /system/media/audio/alarms >nul 2>&1
   call :subobbclean
-  Echo.
+  Echo/
   Echo  Pulling NOTIFICATIONS audio files...
   adb pull /system/media/audio/notifications/ . >nul 2>&1
   call :suboggopt
   Echo  Pushing optimized NOTIFICATIONS back to device...
   adb push OGG /system/media/audio/notifications >nul 2>&1
   call :subobbclean
-  Echo.
+  Echo/
   Echo  Pulling RINGTONES audio files...
   adb pull /system/media/audio/ringtones/ . >nul 2>&1
   call :suboggopt
   Echo  Pushing optimized RINGTONES back to device...
   adb push OGG /system/media/audio/ringtones >nul 2>&1
   call :subobbclean
-  Echo.
+  Echo/
   Echo  Pulling UI audio files...
   adb pull /system/media/audio/ui/ . >nul 2>&1
   call :suboggopt
   Echo  Pushing optimized UI back to device...
   adb push OGG /system/media/audio/ui >nul 2>&1
   call :subobbclean
-  Echo.
+  Echo/
   Echo  All audio optimizations complete!
   Pause
   goto optimizeogg
@@ -246,7 +314,7 @@ if not %choice% == 0 goto optimizeogg
 
 :unlock
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллл
 Echo    л                                 л      ллл
 Echo    л  Unlock bootloader:             л     л   л
@@ -257,14 +325,14 @@ Echo    л                                 л    ллллллл
 Echo    л  [0]  Main menu                 л    ллллллл
 Echo    л                                 л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == 1 goto ffu
 if %choice% == 2 (
-  Echo.
+  Echo/
   fastboot oem unlock
-  Echo.
+  Echo/
   goto start
 )
 if %choice% == 0 goto start
@@ -274,7 +342,7 @@ if not %choice% == 0 goto unlock
 
 :ffu
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллл
 Echo    л                                   л      ллл
 Echo    л  Unlock bootloader:               л     л   л
@@ -285,7 +353,7 @@ Echo    л                                   л    ллллллл
 Echo    л  [0]  Unlock menu                 л    ллллллл
 Echo    л                                   л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == 1 (
@@ -296,9 +364,9 @@ if %choice% == 1 (
   goto start
 )
 if %choice% == 2 (
-  Echo.
+  Echo/
   fastboot flashing unlock
-  Echo.
+  Echo/
   Pause
   goto start
 )
@@ -309,7 +377,7 @@ if not %choice% == 0 goto ffu
 
 :relock
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллл
 Echo    л                               л
 Echo    л  Relock bootloader:           л      ллл
@@ -320,14 +388,14 @@ Echo    л                               л    ллллллл
 Echo    л  [0]  Main menu               л    ллллллл
 Echo    л                               л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == 1 goto ffl
 if %choice% == 2 (
-  Echo.
+  Echo/
   fastboot oem lock
-  Echo.
+  Echo/
   Pause
   goto start
 )
@@ -338,7 +406,7 @@ if not %choice% == 0 goto relock
 
 :ffl
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллл
 Echo    л                                   л
 Echo    л  Relock bootloader:               л      ллл
@@ -349,7 +417,7 @@ Echo    л                                   л    ллллллл
 Echo    л  [0]  Relock menu                 л    ллллллл
 Echo    л                                   л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @echo off
 set /p choice=Select: 
 if %choice% == 1 (
@@ -359,9 +427,9 @@ if %choice% == 1 (
   goto start
 )
 if %choice% == 2 (
-  Echo.
+  Echo/
   fastboot flashing lock
-  Echo.
+  Echo/
   Pause
   goto start
 )
@@ -372,7 +440,7 @@ if not %choice% == 0 goto ffl
 
 :backuprestore
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллл
 Echo    л                           л
 Echo    л  Backup and Restore:      л
@@ -385,7 +453,7 @@ Echo    л                           л    лллллллл         л     лллллллл
 Echo    л  [0]  Main menu           л
 Echo    л                           л
 Echo    ллллллллллллллллллллллллллллл
-Echo.
+Echo/
 set /p choice=Select: 
 if %choice% == b goto backup
 if %choice% == r goto restore
@@ -401,7 +469,7 @@ if not %choice% == 0 goto backuprestore
 
 :backup
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллл
 Echo    л                                     л
 Echo    л   The following are pulled from     л
@@ -423,7 +491,7 @@ Echo    л                                     л
 Echo    л  [0]  Backup/Restore menu           л
 Echo    л                                     л
 Echo    ллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 cd %current%\Data
 set /p choice=Select: 
 if %choice% == f (
@@ -431,46 +499,46 @@ if %choice% == f (
   goto backup
 )
 if %choice% == d (
-  Echo.
+  Echo/
   if not exist "%current%\Backup\Files\Download" mkdir "%current%\Backup\Files\Download"
   adb pull /sdcard/Download "%current%\Backup\Files\Download" >nul 2>&1
-  Echo.
+  Echo/
   Pause
   goto backup
 )
 if %choice% == p (
-  Echo.
+  Echo/
   if not exist "%current%\Backup\Files\Pictures" mkdir "%current%\Backup\Files\Pictures"
   if not exist "%current%\Backup\Files\DCIM\Camera" mkdir "%current%\Backup\Files\DCIM\Camera"
   adb pull /sdcard/Pictures "%current%\Backup\Files\Pictures" >nul 2>&1
   adb pull /sdcard/DCIM/Camera "%current%\Backup\Files\DCIM\Camera" >nul 2>&1
-  Echo.
+  Echo/
   Pause
   goto backup
 )
 if %choice% == m (
-  Echo.
+  Echo/
   if not exist "%current%\Backup\Files\Music" mkdir "%current%\Backup\Files\Music"
   adb pull /sdcard/Music "%current%\Backup\Files\Music" >nul 2>&1
-  Echo.
+  Echo/
   Pause
   goto backup
 )
 if %choice% == v (
-  Echo.
+  Echo/
   if not exist "%current%\Backup\Files\Video" mkdir "%current%\Backup\Files\Video"
   if not exist "%current%\Backup\Files\Videos" mkdir "%current%\Backup\Files\Videos"
   adb pull /sdcard/Video "%current%\Backup\Files\Video" >nul 2>&1
   adb pull /sdcard/Videos "%current%\Backup\Files\Videos" >nul 2>&1
-  Echo.
+  Echo/
   Pause
   goto backup
 )
 if %choice% == a (
-  Echo.
+  Echo/
   if not exist "%current%\Backup\Files\Android" mkdir "%current%\Backup\Files\Android"
   adb pull /sdcard/Android "%current%\Backup\Files\Android" >nul 2>&1
-  Echo.
+  Echo/
   Pause
   goto backup
 )
@@ -485,7 +553,7 @@ if not %choice% == 0 goto backup
 
 :restore
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллл
 Echo    л                                     л
 Echo    л    The following are pushed to      л
@@ -507,33 +575,33 @@ Echo    л                                     л
 Echo    л  [0]  Backup/Restore menu           л
 Echo    л                                     л
 Echo    ллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 set /p choice=Select: 
 if %choice% == f (
-Echo.
+Echo/
 if not exist "%current%\Backup\Full_Backup" do (
   Echo  No backup to push back to device!
   Pause
   Goto restore
 ) else (
   Echo  Performing a full restore to '/sdcard/'
-  Echo.
+  Echo/
   Echo  Depending on how much data you have,
   Echo  this could take a couple hours.
-  Echo.
+  Echo/
   Echo  Restoring...
   adb push "%current%\Backup\Full_Backup" /sdcard >nul 2>&1
-  Echo.
+  Echo/
   Echo  -= RESTORE COMPLETE =-
   Pause
   goto restore
 )
 )
 if %choice% == d (
-Echo.
+Echo/
   if not exist "%current%\Backup\Files\Download" (
     Echo  Nothing in "Download"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
     goto restore
   ) else (
     adb push "%current%\Backup\Files\Download" /sdcard/Download >nul 2>&1
@@ -541,17 +609,17 @@ Echo.
     goto restore
   )
 if %choice% == p (
-Echo.
+Echo/
   if not exist "%current%\Backup\Files\Pictures" (
     Echo  Nothing in "Pictures"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
   ) else (
     adb push "%current%\Backup\Files\Pictures" /sdcard/Pictures >nul 2>&1
-    Echo.
+    Echo/
   )
   if not exist "%current%\Backup\Files\DCIM\Camera" (
     Echo  Nothing in "DCIM\Camera"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
     goto restore
   ) else (
     adb push "%current%\Backup\Files\DCIM\Camera" /sdcard/DCIM/Camera >nul 2>&1
@@ -560,10 +628,10 @@ Echo.
   )
 )
 if %choice% == m (
-Echo.
+Echo/
   if not exist "%current%\Backup\Files\Music" (
     Echo  Nothing in "Music"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
   ) else (
     adb push "%current%\Backup\Files\Music" /sdcard/Music >nul 2>&1
     Pause
@@ -571,17 +639,17 @@ Echo.
   )
 )
 if %choice% == v (
-Echo.
+Echo/
   if not exist "%current%\Backup\Files\Video" (
     Echo  Nothing in "Video"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
   ) else (
     adb push "%current%\Backup\Files\Video" /sdcard/Video >nul 2>&1
-    Echo.
+    Echo/
   )
   if not exist "%current%\Backup\Files\Videos" (
     Echo  Nothing in "Videos"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
     goto restore
   ) else (
     adb push "%current%\Backup\Files\Videos" /sdcard/Videos >nul 2>&1
@@ -590,10 +658,10 @@ Echo.
   )
 )
 if %choice% == a (
-Echo.
+Echo/
   if not exist "%current%\Backup\Files\Android" (
     Echo  Nothing in "Android"
-    @ping localhost -n 2 >NUL
+    ping localhost -n 2 >NUL
   ) else (
     adb push "%current%\Backup\Files\Android" /sdcard/Android >nul 2>&1
     Pause
@@ -611,7 +679,7 @@ if not %choice% == 0 goto restore
 
 :reboot
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллллллл         лллллллл
 Echo    л                                         л       лл        лл
 Echo    л  Choose reboot method:                  л      л            л
@@ -624,7 +692,7 @@ Echo    л                                         л     л              л
 Echo    л  [0]   Main menu                        л      л            л
 Echo    л                                         л       лл        лл
 Echo    ллллллллллллллллллллллллллллллллллллллллллл         лллллллл
-Echo.
+Echo/
 set /p choice=Select: 
 if %choice% == rda goto ra
 if %choice% == rdf goto rf
@@ -639,7 +707,7 @@ if not %choice% == 0 goto reboot
 
 :rf
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллл
 Echo    л                             л
 Echo    л  Reboot device?             л
@@ -648,15 +716,15 @@ Echo    л                             л
 Echo    л    Abort with CTRL+C        л
 Echo    л                             л
 Echo    ллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 Pause
-Echo.
+Echo/
 fastboot reboot
 goto reboot
 
 :ra
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллл
 Echo    л                             л
 Echo    л  Reboot device?             л
@@ -665,15 +733,15 @@ Echo    л                             л
 Echo    л    Abort with CTRL+C        л
 Echo    л                             л
 Echo    ллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 Pause
-Echo.
+Echo/
 adb reboot
 goto reboot
 
 :rr
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллл
 Echo    л                             л
 Echo    л  Reboot into recovery?      л
@@ -682,15 +750,15 @@ Echo    л                             л
 Echo    л    Abort with CTRL+C        л
 Echo    л                             л
 Echo    ллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 Pause
-Echo.
+Echo/
 adb reboot recovery
 goto reboot
 
 :rb
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллл
 Echo    л                             л
 Echo    л  Reboot into bootloader?    л
@@ -699,15 +767,15 @@ Echo    л                             л
 Echo    л    Abort with CTRL+C        л
 Echo    л                             л
 Echo    ллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 Pause
-Echo.
+Echo/
 adb reboot bootloader
 goto reboot
 
 :flash
 cls
-Echo.
+Echo/
 Echo    лллллллллллллллллллллллллллллл
 Echo    л                            л    лллллллл
 Echo    л  Flash images:             л    лББББББл               ллллл
@@ -717,7 +785,7 @@ Echo    л                            л    лллллллл   ллллллллл   лБББл
 Echo    л  [0]   Main menu           л    л######л          л    лБББл
 Echo    л                            л    лллллллл         л     ллллл
 Echo    лллллллллллллллллллллллллллллл
-Echo.
+Echo/
 set /p choice=Select: 
 if %choice% == fr goto flashrecovery
 if %choice% == 0 goto start
@@ -726,7 +794,7 @@ if not %choice% == 0 goto flash
 
 :flashrecovery
 cls
-Echo.
+Echo/
 Echo    лллллллллллллллллллллллллллллллллллллл
 Echo    л                                    л    лллллллл
 Echo    л  Flash recovery:                   л    лББББББл               ллллл
@@ -737,12 +805,12 @@ Echo    л                                    л    л######л          л    лБББл
 Echo    л  [0]   Flash menu                  л    лллллллл         л     ллллл
 Echo    л                                    л
 Echo    лллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 set /p choice=Select: 
 if %choice% == fr (
-  Echo.
+  Echo/
   fastboot flash recovery "%current%/Data/recovery.img"
-  Echo.
+  Echo/
   Pause
   goto start
 )
@@ -752,7 +820,7 @@ if not %choice% == 0 goto flashrecovery
 
 :exit
 cls
-Echo.
+Echo/
 Echo    ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
 Echo    л                                                       лл
 Echo    л        Thank you for choosing Android Job Box!        лБл
@@ -769,7 +837,7 @@ Echo    л                                                       лБл
 Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллБл
 Echo     лББББББББББББББББББББББББББББББББББББББББББББББББББББББББл
 Echo      ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
-Echo.
+Echo/
 @ping localhost -n 3 >NUL
 exit
 
@@ -777,7 +845,7 @@ exit
   if exist OGG del /Q OGG
   @md OGG
   cls
-  Echo.
+  Echo/
 Goto :eof
 
 :suboggopt
@@ -790,7 +858,7 @@ Goto :eof
 :suboggpostopt
   @rmdir /S /Q OGG
   @del *.ogg
-  Echo.
+  Echo/
   Echo  Optimizations complete!
   Pause
 Goto :eof
@@ -816,40 +884,45 @@ Goto :eof
 if exist %current%\Backup\Full_Backup (
   :backupfolderexists
   cls
-  Echo  Backup folder already exists
-  Echo.
-  Echo  [o]  Overwrite local files with current device files
-  Echo  [w]  Wipe current local backup and start fresh
-  Echo.
-  Echo  [0]  Backup menu
-  Echo.
-set /p option=Select: 
+  Echo/
+  Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+  Echo    л                                                        л
+  Echo    л  Backup folder already exists!                         л
+  Echo    л                                                        л
+  Echo    л  [o]  Overwrite local files with current device files  л
+  Echo    л  [w]  Wipe current local backup and start fresh        л
+  Echo    л                                                        л
+  Echo    л  [0]  Backup menu                                      л
+  Echo    л                                                        л
+  Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+  Echo/
+  set /p option=Select: 
   if %option% == o (
     cls
     Echo  Merging device files with existing local files
-    Echo.
+    Echo/
     Echo  Depending on how much data you have,
     Echo  this could take a couple hours.
-    Echo.
+    Echo/
     Echo  Backing up...
     adb pull /sdcard/ "%current%\Backup\Full_Backup" >nul 2>&1
-    Echo.
+    Echo/
     Echo  -= BACKUP COMPLETE =-
     Pause
     Goto :eof
   )
   if %option% == w (
     cls
-    Echo.
+    Echo/
     Echo  Removing all current local files in 'Full_Backup'
     rmdir /S /Q "%current%\Backup\Full_Backup" >nul 2>&1
-    Echo.
+    Echo/
     Echo  Depending on how much data you have,
     Echo  this could take a couple hours.
-    Echo.
+    Echo/
     Echo  Backing up...
     adb pull /sdcard/ "%current%\Backup\Full_Backup" >nul 2>&1
-    Echo.
+    Echo/
     Echo  -= BACKUP COMPLETE =-
     Pause
     Goto :eof
@@ -861,13 +934,13 @@ set /p option=Select:
 )
 )
     cls
-    Echo.
+    Echo/
     Echo  Depending on how much data you have,
     Echo  this could take a couple hours.
-    Echo.
+    Echo/
     Echo  Backing up...
     adb pull /sdcard/ "%current%\Backup\Full_Backup" >nul 2>&1
-    Echo.
+    Echo/
     Echo  -= BACKUP COMPLETE =-
     Pause
 Goto :eof
