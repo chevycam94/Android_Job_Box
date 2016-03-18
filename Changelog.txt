@@ -1,3 +1,9 @@
+v2.00
+* Updated the adb and fastboot binaries from v23.1
+* Added zipalign binary for Windows.  Now it doesnt rely on sdk tools
+* Added /data/app APK optimization
+* Fixed zipaligning for system APKs
+
 v1.70
 * Reworked the main menu to make selections easier to read
 * Added batch APK install section (not to be confused with sideload)

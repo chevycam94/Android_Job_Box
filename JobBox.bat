@@ -1,7 +1,7 @@
 mode 140,50
 @echo off
 Color a
-Title Android Job Box v1.70 by ChevyCam94
+Title Android Job Box v2.00 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
@@ -10,7 +10,7 @@ cd %current%\Data
 :start
 cls
 Echo/
-Echo    лллллл  Android Job Box v1.70  лллллл             \   /
+Echo    лллллл  Android Job Box v2.00  лллллл             \   /
 Echo    л    лллллл By ChevyCam94 лллллл    л             ллллл
 Echo    л                                   л           ллллллллл
 Echo    л  [1]  Unlock bootloader           л          ллл ллл ллл
@@ -149,6 +149,9 @@ Echo    ллллллллллллллллллллллллллллллллллллллллл   лллБББББллл
 Echo    л                                       л     лБББББл
 Echo    л  [a]  \system\app              (adb)  л   лллБББББллл
 Echo    л  [p]  \system\priv-app         (adb)  л     ллллллл
+Echo    л  [d]  \data\app                (adb)  л
+Echo    л                                       л
+Echo    л  [oa] Optimize ALL APKs        (adb)  л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo    л                                       л
@@ -170,6 +173,7 @@ if %choice% == a (
   del /Q /S *.so >nul 2>&1
   call :subzipalign
   Echo  Pushing APKs...
+  adb remount >nul 2>&1
   adb push TEMP /system/app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
@@ -191,7 +195,90 @@ if %choice% == p (
   del /Q /S *.so >nul 2>&1
   call :subzipalign
   Echo  Pushing APKs...
+  adb remount >nul 2>&1
   adb push TEMP /system/priv-app >nul 2>&1
+  Echo  Cleaning up local temporary files...
+  rd /Q /S TEMP >nul 2>&1
+  Echo/
+  Echo  -= ZIPALIGN COMPLETE =-
+  Echo/
+  Pause
+  goto zipalignapk
+)
+if %choice% == d (
+  Echo/
+  Echo  Zipaligning APKs from '\data\app'
+  Echo/
+  Echo  Pulling APKs...
+  if exist TEMP rd /Q /S TEMP
+  mkdir TEMP
+  adb start-server >nul 2>&1
+  adb pull /data/app TEMP >nul 2>&1
+  del /Q /S *.so >nul 2>&1
+  del /Q /S *.odex >nul 2>&1
+  call :subzipalign
+  Echo  Pushing APKs...
+  adb remount >nul 2>&1
+  adb push TEMP /data/app >nul 2>&1
+  Echo  Cleaning up local temporary files...
+  rd /Q /S TEMP >nul 2>&1
+  Echo/
+  Echo  -= ZIPALIGN COMPLETE =-
+  Echo/
+  Pause
+  goto zipalignapk
+)
+if %choice% == oa (
+  Echo/
+  Echo  -------------------------------
+  Echo  Preparing to zipalign ALL APKs!
+  Echo  -------------------------------
+  Echo/
+  Echo  Zipaligning APKs from '\system\app'
+  Echo/
+  Echo  Pulling APKs...
+  if exist TEMP rd /Q /S TEMP
+  mkdir TEMP
+  adb start-server >nul 2>&1
+  adb pull /system/app TEMP >nul 2>&1
+  del /Q /S *.so >nul 2>&1
+  call :subzipalign
+  Echo  Pushing APKs...
+  adb remount >nul 2>&1
+  adb push TEMP /system/app >nul 2>&1
+  Echo  Cleaning up local temporary files...
+  rd /Q /S TEMP >nul 2>&1
+  Echo/
+  Echo/
+  Echo  Zipaligning APKs from '\system\priv-app'
+  Echo/
+  Echo  Pulling APKs...
+  if exist TEMP rd /Q /S TEMP
+  mkdir TEMP
+  adb start-server >nul 2>&1
+  adb pull /system/priv-app TEMP >nul 2>&1
+  del /Q /S *.so >nul 2>&1
+  call :subzipalign
+  Echo  Pushing APKs...
+  adb remount >nul 2>&1
+  adb push TEMP /system/priv-app >nul 2>&1
+  Echo  Cleaning up local temporary files...
+  rd /Q /S TEMP >nul 2>&1
+  Echo/
+  Echo/
+  Echo  Zipaligning APKs from '\data\app'
+  Echo/
+  Echo  Pulling APKs...
+  if exist TEMP rd /Q /S TEMP
+  mkdir TEMP
+  adb start-server >nul 2>&1
+  adb pull /data/app TEMP >nul 2>&1
+  del /Q /S *.so >nul 2>&1
+  del /Q /S *.odex >nul 2>&1
+  call :subzipalign
+  Echo  Pushing APKs...
+  adb remount >nul 2>&1
+  adb push TEMP /data/app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
   Echo/
@@ -203,6 +290,8 @@ if %choice% == p (
 if %choice% == 0 goto optimizations
 if not %choice% == a goto zipalignapk
 if not %choice% == o goto zipalignapk
+if not %choice% == d goto zipalignapk
+if not %choice% == oa goto zipalignapk
 if not %choice% == 0 goto zipalignapk
 
 :optimizeogg
@@ -873,7 +962,6 @@ Goto :eof
   Echo  Zipaligning...
   For /R TEMP %%G IN (*.apk) do (
     zipalign -f 4 %%G %%G_zipaligned >nul 2>&1
-    zipalign -c -v 4 %%G_zipaligned >nul 2>&1
     del %%G >nul 2>&1
     copy %%G_zipaligned %%G >nul 2>&1
     del %%G_zipaligned >nul 2>&1
