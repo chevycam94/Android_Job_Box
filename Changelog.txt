@@ -1,3 +1,12 @@
+v3.00
+* Updated all data binaries in /Data with up-to-date versions
+* Fixed the OGG optimization process
+* Fixed mounting of /system in TWRP
+* Fixed a couple menu text inconsistencies
+* Removed a couple unnecessary subroutines
+* Reduced the size of some subroutines
+* Optimized the removal of non-apks and empty folders
+
 v2.00
 * Updated the adb and fastboot binaries from v23.1
 * Added zipalign binary for Windows.  Now it doesnt rely on sdk tools

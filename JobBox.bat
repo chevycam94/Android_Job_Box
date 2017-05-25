@@ -1,16 +1,24 @@
 mode 140,50
 @echo off
 Color a
-Title Android Job Box v2.00 by ChevyCam94
+Title Android Job Box v3.00 by ChevyCam94
 cd >> tmp.log
 set /p current=< tmp.log
 del tmp.log
 cd %current%\Data
 
+cls
+Echo  Please be aware, this the majority of this programs work is done
+Echo  in recovery mode.  Because of this, some functions may not work
+Echo  as expected when booted in Android.  The use of TWRP 3.x.x-x or
+Echo  newer is recommended, and in a couple places, required.
+Echo/
+Pause
+
 :start
 cls
 Echo/
-Echo    лллллл  Android Job Box v2.00  лллллл             \   /
+Echo    лллллл  Android Job Box v3.00  лллллл             \   /
 Echo    л    лллллл By ChevyCam94 лллллл    л             ллллл
 Echo    л                                   л           ллллллллл
 Echo    л  [1]  Unlock bootloader           л          ллл ллл ллл
@@ -68,11 +76,10 @@ Echo    л  [0]  Main menu                       л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == i (
   if not exist "%current%\Data\APKs" (
-    Echo  'APKs" directory doesnt exist!
+    Echo  'APKs' directory doesnt exist!
     ping localhost -n 3 >NUL
     Goto installapks
   ) else (
@@ -129,7 +136,6 @@ Echo    л  [0]  Main menu                       л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == a goto zipalignapk
 if %choice% == o goto optimizeogg
@@ -159,22 +165,23 @@ Echo    л  [0]  Optimizations menu              л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
+adb remount >nul 2>&1
+Echo/
 if %choice% == a (
-  Echo/
   Echo  Zipaligning APKs from '\system\app'
   Echo/
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
-  adb start-server >nul 2>&1
   adb pull /system/app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
-  adb push TEMP /system/app >nul 2>&1
+  adb push %current%\Data\TEMP\. /system/ >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
   Echo/
@@ -190,13 +197,14 @@ if %choice% == p (
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
-  adb start-server >nul 2>&1
   adb pull /system/priv-app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
-  adb push TEMP /system/priv-app >nul 2>&1
+  adb push %current%\Data\TEMP\. /system/ >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
   Echo/
@@ -212,14 +220,14 @@ if %choice% == d (
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
-  adb start-server >nul 2>&1
-  adb pull /data/app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
-  del /Q /S *.odex >nul 2>&1
+  adb pull /data/app TEMP
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
-  adb push TEMP /data/app >nul 2>&1
+  adb push %current%\Data\TEMP\. /data/ >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
   Echo/
@@ -230,21 +238,20 @@ if %choice% == d (
 )
 if %choice% == oa (
   Echo/
-  Echo  -------------------------------
-  Echo  Preparing to zipalign ALL APKs!
-  Echo  -------------------------------
+  Echo  Preparing to zipalign ALL APKs...
   Echo/
   Echo  Zipaligning APKs from '\system\app'
   Echo/
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
-  adb start-server >nul 2>&1
   adb pull /system/app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
   adb push TEMP /system/app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
@@ -255,12 +262,13 @@ if %choice% == oa (
   Echo  Pulling APKs...
   if exist TEMP rd /Q /S TEMP
   mkdir TEMP
-  adb start-server >nul 2>&1
   adb pull /system/priv-app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
   adb push TEMP /system/priv-app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
@@ -273,11 +281,12 @@ if %choice% == oa (
   mkdir TEMP
   adb start-server >nul 2>&1
   adb pull /data/app TEMP >nul 2>&1
-  del /Q /S *.so >nul 2>&1
-  del /Q /S *.odex >nul 2>&1
+  Echo  Removing all non-apk files...
+  for /R "%current%\Data\TEMP" %%f in (*) do (if not "%%~xf"==".apk" del "%%~f")
+  Echo  Removing all empty directories...
+  for /f "usebackq delims=" %%d in (`"dir /ad/b/s | sort /R"`) do rd "%%d"
   call :subzipalign
   Echo  Pushing APKs...
-  adb remount >nul 2>&1
   adb push TEMP /data/app >nul 2>&1
   Echo  Cleaning up local temporary files...
   rd /Q /S TEMP >nul 2>&1
@@ -317,77 +326,101 @@ Echo    л  [0]  Optimizations menu              л
 Echo    л                                       л
 Echo    ллллллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
+adb remount >nul 2>&1
+Echo/
 if %choice% == a (
-  Echo  Pulling alarms files...
   call :suboggpreopt
-  adb pull /system/media/audio/alarms/ . >nul 2>&1
+  Echo  Pulling alarms files...
+  adb pull /system/media/audio/alarms/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\alarms\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\alarms
   call :suboggopt
+  Echo  Finished compression...
   Echo  Pushing optimized audio back to device...
-  adb push OGG /system/media/audio/alarms >nul 2>&1
+  adb push %current%\Data\OGG\. /system/media/audio/alarms/ >nul 2>&1
   call :suboggpostopt
   goto optimizeogg
 )
 if %choice% == n (
-  Echo  Pulling notifications files...
   call :suboggpreopt
-  adb pull /system/media/audio/notifications/ . >nul 2>&1
+  Echo  Pulling notifications files...
+  adb pull /system/media/audio/notifications/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\notifications\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\notifications >nul 2>&1
   call :suboggopt
+  Echo  Finished compression...
   Echo  Pushing optimized audio back to device...
-  adb push OGG /system/media/audio/notifications >nul 2>&1
+  adb push %current%\Data\OGG\. /system/media/audio/notifications/ >nul 2>&1
   call :suboggpostopt
   goto optimizeogg
 )
 if %choice% == r (
-  Echo  Pulling ringtones files...
   call :suboggpreopt
-  adb pull /system/media/audio/ringtones/ . >nul 2>&1
+  Echo  Pulling ringtones files...
+  adb pull /system/media/audio/ringtones/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\ringtones\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\ringtones >nul 2>&1
   call :suboggopt
+  Echo  Finished compression...
   Echo  Pushing optimized audio back to device...
-  adb push OGG /system/media/audio/ringtones >nul 2>&1
+  adb push %current%\Data\OGG\. /system/media/audio/ringtones/ >nul 2>&1
   call :suboggpostopt
   goto optimizeogg
 )
 if %choice% == u (
-  Echo  Pulling ui files...
   call :suboggpreopt
-  adb pull /system/media/audio/ui/ . >nul 2>&1
+  Echo  Pulling ui files...
+  adb pull /system/media/audio/ui/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\ui\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\ui >nul 2>&1
   call :suboggopt
+  Echo  Finished compression...
   Echo  Pushing optimized audio back to device...
-  adb push OGG /system/media/audio/ui >nul 2>&1
+  adb push %current%\Data\OGG\. /system/media/audio/ui/ >nul 2>&1
   call :suboggpostopt
   goto optimizeogg
 )
 if %choice% == aa (
-  call :suboggpreopt
-  Echo  Pulling ALARM audio files...
-  adb pull /system/media/audio/alarms/ . >nul 2>&1
+  Echo  Pulling ALARMS...
+  adb pull /system/media/audio/notifications/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\notifications\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\notifications >nul 2>&1
+  Echo  Optimizing ALARMS...
   call :suboggopt
-  Echo  Pushing optimized ALARMS back to device...
-  adb push OGG /system/media/audio/alarms >nul 2>&1
-  call :subobbclean
+  Echo  Pushing ALARMS...
+  adb push %current%\Data\OGG\. /system/media/audio/alarms/ >nul 2>&1
+  rmdir /S /Q %current%\Data\OGG
   Echo/
-  Echo  Pulling NOTIFICATIONS audio files...
-  adb pull /system/media/audio/notifications/ . >nul 2>&1
+  Echo  Pulling NOTIFICATIONS...
+  adb pull /system/media/audio/notifications/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\notifications\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\notifications >nul 2>&1
+  Echo  Optimizing NOTIFICATIONS...
   call :suboggopt
-  Echo  Pushing optimized NOTIFICATIONS back to device...
-  adb push OGG /system/media/audio/notifications >nul 2>&1
-  call :subobbclean
+  Echo  Pushing NOTIFICATIONS...
+  adb push %current%\Data\OGG\. /system/media/audio/alarms/ >nul 2>&1
+  rmdir /S /Q %current%\Data\OGG
   Echo/
-  Echo  Pulling RINGTONES audio files...
-  adb pull /system/media/audio/ringtones/ . >nul 2>&1
+  Echo  Pulling RINGTONES...
+  adb pull /system/media/audio/ringtones/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\ringtones\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\ringtones >nul 2>&1
+  Echo  Optimizing RINGTONES...
   call :suboggopt
-  Echo  Pushing optimized RINGTONES back to device...
-  adb push OGG /system/media/audio/ringtones >nul 2>&1
-  call :subobbclean
+  Echo  Pushing RINGTONES...
+  adb push %current%\Data\OGG\. /system/media/audio/ringtones/ >nul 2>&1
+  rmdir /S /Q %current%\Data\OGG
   Echo/
-  Echo  Pulling UI audio files...
-  adb pull /system/media/audio/ui/ . >nul 2>&1
+  Echo  Pulling UI...
+  adb pull /system/media/audio/ui/ %current%\Data\OGG >nul 2>&1
+  move %current%\Data\OGG\ui\*.ogg %current%\Data\OGG >nul 2>&1
+  rmdir /s /q %current%\Data\OGG\ui >nul 2>&1
+  Echo  Optimizing UI...
   call :suboggopt
-  Echo  Pushing optimized UI back to device...
-  adb push OGG /system/media/audio/ui >nul 2>&1
-  call :subobbclean
+  Echo  Pushing UI...
+  adb push %current%\Data\OGG\. /system/media/audio/ui/ >nul 2>&1
+  rmdir /S /Q %current%\Data\OGG
   Echo/
   Echo  All audio optimizations complete!
   Pause
@@ -415,7 +448,6 @@ Echo    л  [0]  Main menu                 л    ллллллл
 Echo    л                                 л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == 1 goto ffu
 if %choice% == 2 (
@@ -443,7 +475,6 @@ Echo    л  [0]  Unlock menu                 л    ллллллл
 Echo    л                                   л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == 1 (
   call :subfullbackup
@@ -478,7 +509,6 @@ Echo    л  [0]  Main menu               л    ллллллл
 Echo    л                               л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == 1 goto ffl
 if %choice% == 2 (
@@ -507,7 +537,6 @@ Echo    л  [0]  Relock menu                 л    ллллллл
 Echo    л                                   л    ллллллл
 Echo    ллллллллллллллллллллллллллллллллллллл
 Echo/
-@echo off
 set /p choice=Select: 
 if %choice% == 1 (
   call :subfullbackup
@@ -907,31 +936,8 @@ if %choice% == 0 goto flash
 if not %choice% == fr goto flashrecovery
 if not %choice% == 0 goto flashrecovery
 
-:exit
-cls
-Echo/
-Echo    ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
-Echo    л                                                       лл
-Echo    л        Thank you for choosing Android Job Box!        лБл
-Echo    л  If you found this helpful, please consider donating  лБл
-Echo    л                                                       лБл
-Echo    л    No part of this script may be copied, modified     лБл
-Echo    л    redistributed, or included anywhere without my     лБл
-Echo    л               explicit written consent.               лБл
-Echo    л                                                       лБл
-Echo    л   Credit to Lexmazter for the original script base    лБл
-Echo    л   Credit to Chris Bagwell for SOX                     лБл
-Echo    л   Credit to Google for the adb/fastboot binaries      лБл
-Echo    л                                                       лБл
-Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллБл
-Echo     лББББББББББББББББББББББББББББББББББББББББББББББББББББББББл
-Echo      ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
-Echo/
-@ping localhost -n 3 >NUL
-exit
-
 :suboggpreopt
-  if exist OGG del /Q OGG
+  if exist %current%\Data\OGG del /Q %current%\Data\OGG
   @md OGG
   cls
   Echo/
@@ -939,32 +945,33 @@ Goto :eof
 
 :suboggopt
   Echo  Optimizing audio files...
-  for %%a in ("*.ogg") do (
-    sox.exe %%a -C 0 "%current%\Data\OGG\%%a" >nul 2>&1
+  for %%a in ("%current%\Data\OGG\*.ogg") do (
+    sox.exe %%a -C 0 "%%a"
   )
 Goto :eof
 
 :suboggpostopt
-  @rmdir /S /Q OGG
-  @del *.ogg
+  @rmdir /S /Q %current%\Data\OGG
   Echo/
   Echo  Optimizations complete!
   Pause
 Goto :eof
 
-:subobbclean
-  @rmdir /S /Q OGG
-  @del *.ogg
-  @md OGG
-Goto :eof
-
 :subzipalign
-  Echo  Zipaligning...
+  Echo  Zipaligning apks...
+  REM  #### THIS IS FOR NEWER SYSTEMS
+  For /R TEMP\* %%G IN (*.apk) do (
+    zipalign -f 4 %%G %%G_zipaligned
+    del %%G
+    copy %%G_zipaligned %%G
+    del %%G_zipaligned
+  )
+  REM  #### THIS IS FOR OLDER SYSTEMS
   For /R TEMP %%G IN (*.apk) do (
-    zipalign -f 4 %%G %%G_zipaligned >nul 2>&1
-    del %%G >nul 2>&1
-    copy %%G_zipaligned %%G >nul 2>&1
-    del %%G_zipaligned >nul 2>&1
+    zipalign -f 4 %%G %%G_zipaligned
+    del %%G
+    copy %%G_zipaligned %%G
+    del %%G_zipaligned
   )
 Goto :eof
 
@@ -1032,3 +1039,26 @@ if exist %current%\Backup\Full_Backup (
     Echo  -= BACKUP COMPLETE =-
     Pause
 Goto :eof
+
+:exit
+cls
+Echo/
+Echo    ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+Echo    л                                                       лл
+Echo    л        Thank you for choosing Android Job Box!        лБл
+Echo    л  If you found this helpful, please consider donating  лБл
+Echo    л                                                       лБл
+Echo    л    No part of this script may be copied, modified     лБл
+Echo    л    redistributed, or included anywhere without my     лБл
+Echo    л               explicit written consent.               лБл
+Echo    л                                                       лБл
+Echo    л   Credit to Lexmazter for the original script base    лБл
+Echo    л   Credit to Chris Bagwell for SOX                     лБл
+Echo    л   Credit to Google for the adb/fastboot binaries      лБл
+Echo    л                                                       лБл
+Echo    лллллллллллллллллллллллллллллллллллллллллллллллллллллллллБл
+Echo     лББББББББББББББББББББББББББББББББББББББББББББББББББББББББл
+Echo      ллллллллллллллллллллллллллллллллллллллллллллллллллллллллл
+Echo/
+@ping localhost -n 3 >NUL
+exit
