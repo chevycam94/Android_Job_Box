@@ -1,3 +1,14 @@
+v3.10
+* Updated all binaries in /Data with up-to-date versions from v26-RC tools
+* Fixed menu choices in REBOOT menu
+* Fixed backup and restore functions
+* Fixed timing issue with bootloader lock/unlock commands
+* Fixed a ton of misplaced commands
+* Reworked terminal output to be more visually friendly
+* Made some adb push/pull functions verbose again
+* Removed some unused code blocks
+* Made reboot options escapable within the script
+
 v3.00
 * Updated all data binaries in /Data with up-to-date versions
 * Fixed the OGG optimization process
